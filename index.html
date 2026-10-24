@@ -1,0 +1,302 @@
+<title>AI Store Manager</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a long retail "shelf" page. Hero pairs the pitch with a live thermal receipt; module wall is filterable by release phase. */
+:root{
+  --bg:#eef1ef; --surface:#ffffff; --fg:#10202b; --muted:#53656f; --line:#cfd8d4;
+  --accent:#0b7a68; --accent-fg:#ffffff; --tag:#ffd23f; --tag-fg:#1b1500; --sale:#c8321e;
+  --font-display:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;
+  --font-body:'Instrument Sans','Helvetica Neue',Arial,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1519; --surface:#152229; --fg:#e8eeec; --muted:#97aab2; --line:#27383f;
+  --accent:#3fd0b4; --accent-fg:#06201b; --tag:#ffd23f; --tag-fg:#1b1500; --sale:#ff7b63; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1519; --surface:#152229; --fg:#e8eeec; --muted:#97aab2; --line:#27383f;
+  --accent:#3fd0b4; --accent-fg:#06201b; --tag:#ffd23f; --tag-fg:#1b1500; --sale:#ff7b63; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:400 17px/1.6 var(--font-body);
+  padding-inline:0}
+.wrap{max-width:1120px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--font-display);line-height:1.05;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.6rem,6.5vw,5.2rem);font-weight:800;letter-spacing:-.03em}
+h2{font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:-.02em}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0}
+a{color:inherit}
+.eyebrow{font:600 .75rem/1 var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:20px}
+.logo{font:800 1.15rem var(--font-display);letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.logo i{width:22px;height:22px;background:var(--accent);border-radius:6px 6px 6px 0;display:block}
+.btn{display:inline-block;text-decoration:none;font:600 .95rem var(--font-body);padding:13px 22px;border-radius:999px;background:var(--accent);color:var(--accent-fg);border:2px solid var(--accent)}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn:hover{filter:brightness(1.08)}
+
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-block:48px 72px}
+.hero p.lead{font-size:1.25rem;color:var(--muted);max-width:34em;margin-top:24px}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--tag) 62%);color:var(--fg);padding-inline:.05em}
+
+.receipt{font:400 .86rem/1.55 var(--font-mono);background:var(--surface);color:var(--fg);padding:26px 24px 34px;max-width:360px;margin-inline:auto;width:100%;
+  box-shadow:0 18px 40px -18px rgba(8,20,26,.45);transform:rotate(1.6deg);
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),96% 100%,92% calc(100% - 10px),88% 100%,84% calc(100% - 10px),80% 100%,76% calc(100% - 10px),72% 100%,68% calc(100% - 10px),64% 100%,60% calc(100% - 10px),56% 100%,52% calc(100% - 10px),48% 100%,44% calc(100% - 10px),40% 100%,36% calc(100% - 10px),32% 100%,28% calc(100% - 10px),24% 100%,20% calc(100% - 10px),16% 100%,12% calc(100% - 10px),8% 100%,4% calc(100% - 10px),0 100%)}
+.receipt .c{text-align:center}
+.receipt .r{display:flex;justify-content:space-between;gap:12px}
+.receipt hr{border:0;border-top:1px dashed var(--muted);margin:12px 0}
+.receipt .sale{color:var(--sale);font-weight:600}
+.receipt .tot{font-weight:600;font-size:1.05rem}
+.receipt .ai{margin-top:14px;background:var(--tag);color:var(--tag-fg);padding:10px 12px;font-size:.78rem;border-radius:3px}
+
+section{padding-block:72px;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:14px;margin-bottom:40px;max-width:46rem}
+.sec-head p{color:var(--muted);font-size:1.1rem}
+
+.teams{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.team{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.team b{display:block;font:700 1.05rem var(--font-display)}
+.team span{font-size:.88rem;color:var(--muted)}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.filters button{font:600 .85rem var(--font-mono);padding:9px 16px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.mod .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.code{font:600 .8rem var(--font-mono);color:var(--accent);letter-spacing:.08em}
+.phase{font:600 .7rem var(--font-mono);padding:4px 9px;border-radius:4px;background:var(--tag);color:var(--tag-fg)}
+.phase.v1{background:var(--accent);color:var(--accent-fg)}
+.phase.v2{background:var(--fg);color:var(--bg)}
+.phase.v3{background:transparent;color:var(--fg);border:1px solid var(--fg)}
+.mod p{color:var(--muted);font-size:.95rem}
+.mod ul{margin:0;padding:0;list-style:none;font-size:.88rem;display:grid;gap:3px}
+.mod li::before{content:"+ ";color:var(--accent);font-family:var(--font-mono)}
+.mod .n{font:400 .75rem var(--font-mono);color:var(--muted);margin-top:auto;padding-top:6px}
+.mod[hidden]{display:none}
+
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.step{padding:22px;border-right:1px solid var(--line);display:grid;gap:8px;align-content:start;min-width:0}
+.step:last-child{border-right:0}
+.step small{font:600 .72rem var(--font-mono);letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
+.step p{font-size:.93rem;color:var(--muted)}
+@media (max-width:700px){.step{border-right:0;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:0}}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.pair{background:var(--fg);color:var(--bg);border-radius:16px;padding:32px;text-align:center}
+.pair .lab{font:600 .75rem var(--font-mono);letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.pair .digits{font:800 clamp(2.2rem,8vw,3.6rem)/1 var(--font-mono);letter-spacing:.18em;margin:14px 0 10px}
+.pair .sub{font-size:.9rem;opacity:.75}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chips span{font:500 .85rem var(--font-body);border:1px solid var(--line);background:var(--surface);padding:7px 14px;border-radius:999px}
+
+.plat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.plat div{padding:18px;border-left:3px solid var(--accent);background:var(--surface)}
+.plat b{display:block;font:700 1rem var(--font-display)}
+.plat span{font-size:.88rem;color:var(--muted)}
+
+.principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px 36px}
+.principles h3{margin-bottom:6px}
+.principles p{color:var(--muted);font-size:.97rem}
+
+.road{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.road div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.road b{display:block;font:800 2.4rem/1 var(--font-display);font-variant-numeric:tabular-nums}
+.road span{font:500 .8rem var(--font-mono);color:var(--muted)}
+.note{margin-top:20px;font-size:.9rem;color:var(--muted);max-width:44rem}
+
+.final{text-align:center;display:grid;justify-items:center;gap:22px}
+footer{padding-block:32px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+@media (max-width:860px){.hero,.two{grid-template-columns:1fr}.hero{padding-block:24px 56px}.receipt{transform:none}}
+@media (prefers-reduced-motion:no-preference){.mod,.team{transition:transform .18s}.mod:hover,.team:hover{transform:translateY(-3px)}}
+</style>
+
+<div class="wrap">
+  <nav>
+    <div class="logo"><i></i>AI Store Manager</div>
+    <a class="btn ghost" href="https://github.com/Lascages/ai-store-manager">View on GitHub</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Point of sale · stock · screens · cameras · AI</p>
+      <h1 style="margin-top:18px">A whole store team in <em>one app.</em></h1>
+      <p class="lead">Sell, restock, display, film, print, reward and advertise from one place, on any device. When yogurt is three days from its date, the app suggests the discount, prints the label, updates the shop screen and texts your loyal customers.</p>
+      <div class="cta">
+        <a class="btn" href="#modules">Explore the 20 modules</a>
+        <a class="btn ghost" href="https://github.com/Lascages/ai-store-manager">Follow the build</a>
+      </div>
+    </div>
+    <div class="receipt" role="img" aria-label="Sample receipt showing a discounted near-expiry yogurt and an AI suggestion">
+      <div class="c"><b>EPICERIE DU COIN</b><br>Brussels · Till 2<br>14:32 · Ticket 0418</div>
+      <hr>
+      <div class="r"><span>Baguette tradition</span><span>1,40</span></div>
+      <div class="r"><span>Bio milk 1L ×2</span><span>2,38</span></div>
+      <div class="r"><span>Yogurt nature ×4</span><span>3,20</span></div>
+      <div class="r sale"><span>&nbsp; Near-expiry −30%</span><span>−0,96</span></div>
+      <div class="r"><span>Tomatoes 0,640 kg</span><span>2,24</span></div>
+      <hr>
+      <div class="r tot"><span>TOTAL EUR</span><span>8,26</span></div>
+      <div class="r"><span>Card</span><span>8,26</span></div>
+      <div class="r"><span>Loyalty points</span><span>+8</span></div>
+      <div class="ai"><b>AI:</b> 12 yogurts expire in 3 days. Apply −30%, print labels, show on screen 2, text 40 loyal customers? [Do it]</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">The idea</p>
+      <h2>Seven jobs, one subscription.</h2>
+      <p>Independent shops juggle a till, a stock spreadsheet, a camera app, paper posters and social media. None of them talk to each other. AI Store Manager replaces the whole stack and does the analysis you never had time for.</p>
+    </div>
+    <div class="teams">
+      <div class="team"><b>Stock manager</b><span>Levels, counts, reorder alerts</span></div>
+      <div class="team"><b>Quality lead</b><span>Expiry dates, waste, recalls</span></div>
+      <div class="team"><b>Marketer</b><span>Posters, screens, SMS, promos</span></div>
+      <div class="team"><b>Security</b><span>Cameras tied to till events</span></div>
+      <div class="team"><b>Buyer</b><span>Purchase orders, supplier prices</span></div>
+      <div class="team"><b>Analyst</b><span>Dashboards and weekly actions</span></div>
+      <div class="team"><b>Cashier</b><span>Fast, offline-proof checkout</span></div>
+    </div>
+  </section>
+
+  <section id="modules">
+    <div class="sec-head">
+      <p class="eyebrow">Features</p>
+      <h2>20 modules. Switch on only what you need.</h2>
+      <p>Every module ships separately. A shop can sell with just catalogue, stock, till, payments and hardware, then add the rest as it grows. Filter by release phase.</p>
+    </div>
+    <div class="filters" id="filters" role="group" aria-label="Filter modules by release phase"></div>
+    <div class="mods" id="mods"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">AI that acts</p>
+      <h2>From alert to action in one tap.</h2>
+      <p>The assistant explains why it suggests something, and you stay in charge. You pick how much it may do alone: suggest only, ask first, or run routine tasks by itself.</p>
+    </div>
+    <div class="flow">
+      <div class="step"><small>Detect</small><h3>Near-expiry alert</h3><p>Batch dates are tracked at receiving. Products at J-7, J-3 and J-1 land on a watch list.</p></div>
+      <div class="step"><small>Decide</small><h3>Smart markdown</h3><p>A discount is proposed from days left and sales speed, with the reason shown.</p></div>
+      <div class="step"><small>Act</small><h3>One-click promo</h3><p>Price change, shelf label, screen scene and customer message are prepared together.</p></div>
+      <div class="step"><small>Learn</small><h3>Measure the result</h3><p>Sales lift and waste saved feed the next suggestion. Flop products get a replacement idea and a supplier.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="two">
+      <div class="sec-head" style="margin:0">
+        <p class="eyebrow">Plug and play hardware</p>
+        <h2>Every screen and printer finds you.</h2>
+        <p>A small local Store Hub talks to your equipment. A TV on the Wi-Fi shows a six-digit code, you type it in the app, and it appears in your device list, ready for a promo, a camera feed or the live basket.</p>
+        <div class="chips">
+          <span>ESC/POS receipt printers</span><span>Cash drawer</span><span>USB and Bluetooth scanners</span><span>Label printers (Zebra, Brother)</span><span>Connected scales</span><span>Payment terminals</span><span>ONVIF / RTSP cameras</span><span>Any TV with a browser</span><span>Customer display</span>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="lab">Pair new screen</div>
+        <div class="digits">482 915</div>
+        <div class="sub">Enter this code in the app. Name it "Dairy aisle" and send your first promo.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Everywhere</p>
+      <h2>Works in a browser first, then on every device.</h2>
+      <p>The till runs offline and syncs when the connection returns, so a dead internet line never stops a sale.</p>
+    </div>
+    <div class="plat">
+      <div><b>Any browser</b><span>Installable web app</span></div>
+      <div><b>Windows</b><span>x64 and ARM64, POS terminals</span></div>
+      <div><b>macOS</b><span>Intel and Apple Silicon</span></div>
+      <div><b>iPhone and iPad</b><span>Mobile till, camera scanning</span></div>
+      <div><b>Android</b><span>Phones, tablets, Sunmi-type terminals</span></div>
+      <div><b>Linux and ARM</b><span>Mini-PCs, Raspberry Pi</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Principles</p>
+      <h2>Built to be trusted at the till.</h2>
+    </div>
+    <div class="principles">
+      <div><h3>Selling never stops</h3><p>Offline-first, fast start-up, support for entry-level hardware. Target: a first sale within 15 minutes of signing up.</p></div>
+      <div><h3>The AI proposes, you decide</h3><p>Every suggestion says why. Nothing ships without your approval unless you grant it.</p></div>
+      <div><h3>Your data stays yours</h3><p>Full export, full deletion, no resale of customer data.</p></div>
+      <div><h3>Compliant by design</h3><p>VAT, fiscal adapters per country, GDPR, camera law, food traceability and e-invoicing via Peppol.</p></div>
+      <div><h3>One core, many trades</h3><p>Profiles for groceries, clothing, shoes and DIY pre-fill categories, units and reports. No separate versions.</p></div>
+      <div><h3>Open ecosystem</h3><p>Public API, webhooks, Zapier and n8n, and an MCP server so your own assistant can read your shop.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Where it stands</p>
+      <h2>Built in the open.</h2>
+      <p>The product is being built now. The feature tracker lists every planned capability, and the first working pieces are in the repository.</p>
+    </div>
+    <div class="road">
+      <div><b>270</b><span>features tracked</span></div>
+      <div><b>20</b><span>modules</span></div>
+      <div><b>66</b><span>in the MVP</span></div>
+      <div><b>3</b><span>in progress</span></div>
+    </div>
+    <p class="note">In progress today: the touch till demo (TypeScript plus a Rust core compiled to WebAssembly), a hub command that prints a sample receipt, and the back-office web app skeleton. Everything else on this page is planned and marked by phase above.</p>
+  </section>
+
+  <section class="final">
+    <h2>Run your shop like a team of twelve.</h2>
+    <p style="color:var(--muted);max-width:34rem">Read the docs, pick a feature from the tracker, or follow the first releases.</p>
+    <a class="btn" href="https://github.com/Lascages/ai-store-manager">Open the repository</a>
+  </section>
+
+  <footer><span>AI Store Manager · Lascages</span><span>Feature data from the project tracker, October 2026</span></footer>
+</div>
+
+<script>
+var MODS=[
+["POS","Point of sale","Touch till that keeps selling offline.","MVP",31,["Barcode scan, held tickets","Split payments, returns","Mobile till, customer display"]],
+["CAT","Product catalogue","One clean record per product.","MVP",16,["Variants, weight pricing","Barcode enrichment","Bulk CSV import"]],
+["INV","Stock and inventory","Know what you have, everywhere.","MVP",12,["Counts by scan","Batches and recalls","Transfers between shops"]],
+["PAY","Payments","Cash, card, mobile and meal vouchers.","MVP",9,["Card terminals","QR and wallet payments","Card data never stored"]],
+["HW","Hardware and Store Hub","Plug in printers, drawers, scales.","MVP",22,["Auto discovery and pairing","Device health alerts","Over-the-air hub updates"]],
+["FIN","Finance and tax","VAT and fiscal rules handled.","MVP",10,["Multi-rate VAT","Tamper-proof journal","Accountant exports"]],
+["ANA","Reports and dashboards","Today's numbers at a glance.","MVP",15,["X and Z reports","Margin and ABC analysis","Scheduled reports"]],
+["CORE","Platform and accounts","Roles, shops and sign-in.","MVP",15,["Roles and quick PIN","Multi-shop view","Audit log"]],
+["OPS","Quality and security","Tested, monitored, secure.","MVP",18,["Automated checks","Release pipeline","Security by default"]],
+["EXP","Expiry and waste","Sell it before it spoils.","V1",10,["Date per batch","Markdown suggestions","Waste cost tracking"]],
+["SCR","Screens and signage","Any TV becomes a display.","V1",18,["Pair by code","Scene editor, playlists","Live promos from stock"]],
+["CRM","Customers and loyalty","Make regulars feel it.","V1",15,["Points and wallet card","Segments and coupons","GDPR consent tracking"]],
+["PUR","Purchasing","Order the right amount on time.","V1",9,["Purchase orders","Reorder suggestions","Supplier comparison"]],
+["INT","Integrations and API","Connect the tools you use.","V1",8,["Public REST API","Peppol e-invoicing","Zapier, n8n, MCP"]],
+["STF","Staff and operations","Shifts, tasks, checklists.","V1",7,["Clock in and out","Opening checklists","Staff announcements"]],
+["CAM","Cameras and security","See the shop from anywhere.","V2",14,["Live view on any device","Clips linked to till events","People counting"]],
+["MKT","Marketing","Posters, texts and posts, made for you.","V2",13,["Visual generator","Email, SMS, social","Campaign ROI"]],
+["AI","AI and suggestions","Ask your data, act on the answer.","V2",15,["Chat with your sales","Demand forecast","Weekly action plan"]],
+["ECO","E-commerce","Web shop and click and collect.","V2",7,["Synced web shop","Local delivery","WhatsApp orders"]],
+["SUP","Supplier ecosystem","Customer demand reaches suppliers.","V3",9,["Unmet-demand loop","Find-me-this-product","Group buying"]]
+];
+var cur="All",box=document.getElementById("mods"),fb=document.getElementById("filters");
+MODS.forEach(function(m){
+  var d=document.createElement("article");d.className="mod";d.dataset.phase=m[3];
+  d.innerHTML='<div class="top"><span class="code">'+m[0]+'</span><span class="phase '+m[3].toLowerCase()+'">'+m[3]+'</span></div><h3>'+m[1]+'</h3><p>'+m[2]+'</p><ul>'+m[5].map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul><div class="n">'+m[4]+' features planned</div>';
+  box.appendChild(d);
+});
+["All","MVP","V1","V2","V3"].forEach(function(p){
+  var b=document.createElement("button");b.type="button";b.textContent=p;b.setAttribute("aria-pressed",p==="All");
+  b.onclick=function(){
+    cur=p;[].forEach.call(fb.children,function(x){x.setAttribute("aria-pressed",x===b)});
+    [].forEach.call(box.children,function(c){c.hidden=!(p==="All"||c.dataset.phase===p)});
+  };
+  fb.appendChild(b);
+});
+</script>
