@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: a long retail "shelf" page. Hero pairs the pitch with a live thermal receipt; module wall is filterable by release phase. */
+/* Layout: a long retail "shelf" page. Hero pairs the pitch with a live thermal receipt; module wall is filterable by release phase. EN/FR/NL switcher in the nav. */
 :root{
   --bg:#eef1ef; --surface:#ffffff; --fg:#10202b; --muted:#53656f; --line:#cfd8d4;
   --accent:#0b7a68; --accent-fg:#ffffff; --tag:#ffd23f; --tag-fg:#1b1500; --sale:#c8321e;
@@ -19,8 +19,7 @@
   --bg:#0d1519; --surface:#152229; --fg:#e8eeec; --muted:#97aab2; --line:#27383f;
   --accent:#3fd0b4; --accent-fg:#06201b; --tag:#ffd23f; --tag-fg:#1b1500; --sale:#ff7b63; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font:400 17px/1.6 var(--font-body);
-  padding-inline:0}
+body{background:var(--bg);color:var(--fg);font:400 17px/1.6 var(--font-body)}
 .wrap{max-width:1120px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--font-display);line-height:1.05;text-wrap:balance;margin:0}
 h1{font-size:clamp(2.6rem,6.5vw,5.2rem);font-weight:800;letter-spacing:-.03em}
@@ -31,9 +30,13 @@ a{color:inherit}
 .eyebrow{font:600 .75rem/1 var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 
-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:20px}
+nav{display:flex;justify-content:space-between;align-items:center;gap:12px 16px;flex-wrap:wrap;padding-block:20px}
+.nav-r{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .logo{font:800 1.15rem var(--font-display);letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
 .logo i{width:22px;height:22px;background:var(--accent);border-radius:6px 6px 6px 0;display:block}
+.lang{display:flex;border:1.5px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{font:600 .8rem var(--font-mono);padding:8px 13px;border:0;background:transparent;color:var(--fg);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 .btn{display:inline-block;text-decoration:none;font:600 .95rem var(--font-body);padding:13px 22px;border-radius:999px;background:var(--accent);color:var(--accent-fg);border:2px solid var(--accent)}
 .btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
 .btn:hover{filter:brightness(1.08)}
@@ -119,57 +122,60 @@ footer{padding-block:32px;border-top:1px solid var(--line);font-size:.88rem;colo
 <div class="wrap">
   <nav>
     <div class="logo"><i></i>AI Store Manager</div>
-    <a class="btn ghost" href="https://github.com/Lascages/ai-store-manager">View on GitHub</a>
+    <div class="nav-r">
+      <div class="lang" id="lang" role="group" aria-label="Language"></div>
+      <a class="btn ghost" href="https://github.com/Lascages/ai-store-manager" data-k="gh">View on GitHub</a>
+    </div>
   </nav>
 
   <header class="hero">
     <div>
-      <p class="eyebrow">Point of sale · stock · screens · cameras · AI</p>
-      <h1 style="margin-top:18px">A whole store team in <em>one app.</em></h1>
-      <p class="lead">Sell, restock, display, film, print, reward and advertise from one place, on any device. When yogurt is three days from its date, the app suggests the discount, prints the label, updates the shop screen and texts your loyal customers.</p>
+      <p class="eyebrow" data-k="eyebrow">Point of sale · stock · screens · cameras · AI</p>
+      <h1 style="margin-top:18px" data-k="h1" data-html>A whole store team in <em>one app.</em></h1>
+      <p class="lead" data-k="lead">Sell, restock, display, film, print, reward and advertise from one place, on any device. When yogurt is three days from its date, the app suggests the discount, prints the label, updates the shop screen and texts your loyal customers.</p>
       <div class="cta">
-        <a class="btn" href="#modules">Explore the 20 modules</a>
-        <a class="btn ghost" href="https://github.com/Lascages/ai-store-manager">Follow the build</a>
+        <a class="btn" href="#modules" data-k="cta1">Explore the 20 modules</a>
+        <a class="btn ghost" href="https://github.com/Lascages/ai-store-manager" data-k="cta2">Follow the build</a>
       </div>
     </div>
-    <div class="receipt" role="img" aria-label="Sample receipt showing a discounted near-expiry yogurt and an AI suggestion">
-      <div class="c"><b>EPICERIE DU COIN</b><br>Brussels · Till 2<br>14:32 · Ticket 0418</div>
+    <div class="receipt" role="img" id="receipt" aria-label="Sample receipt showing a discounted near-expiry yogurt and an AI suggestion">
+      <div class="c"><b>EPICERIE DU COIN</b><br><span data-k="r_loc">Brussels · Till 2</span><br><span data-k="r_time">14:32 · Ticket 0418</span></div>
       <hr>
-      <div class="r"><span>Baguette tradition</span><span>1,40</span></div>
-      <div class="r"><span>Bio milk 1L ×2</span><span>2,38</span></div>
-      <div class="r"><span>Yogurt nature ×4</span><span>3,20</span></div>
-      <div class="r sale"><span>&nbsp; Near-expiry −30%</span><span>−0,96</span></div>
-      <div class="r"><span>Tomatoes 0,640 kg</span><span>2,24</span></div>
+      <div class="r"><span data-k="r1">Baguette tradition</span><span>1,40</span></div>
+      <div class="r"><span data-k="r2">Bio milk 1L ×2</span><span>2,38</span></div>
+      <div class="r"><span data-k="r3">Yogurt nature ×4</span><span>3,20</span></div>
+      <div class="r sale"><span data-k="r_sale">&nbsp; Near-expiry −30%</span><span>−0,96</span></div>
+      <div class="r"><span data-k="r4">Tomatoes 0,640 kg</span><span>2,24</span></div>
       <hr>
       <div class="r tot"><span>TOTAL EUR</span><span>8,26</span></div>
-      <div class="r"><span>Card</span><span>8,26</span></div>
-      <div class="r"><span>Loyalty points</span><span>+8</span></div>
-      <div class="ai"><b>AI:</b> 12 yogurts expire in 3 days. Apply −30%, print labels, show on screen 2, text 40 loyal customers? [Do it]</div>
+      <div class="r"><span data-k="r_card">Card</span><span>8,26</span></div>
+      <div class="r"><span data-k="r_pts">Loyalty points</span><span>+8</span></div>
+      <div class="ai" data-k="r_ai" data-html><b>AI:</b> 12 yogurts expire in 3 days. Apply −30%, print labels, show on screen 2, text 40 loyal customers? [Do it]</div>
     </div>
   </header>
 
   <section>
     <div class="sec-head">
-      <p class="eyebrow">The idea</p>
-      <h2>Seven jobs, one subscription.</h2>
-      <p>Independent shops juggle a till, a stock spreadsheet, a camera app, paper posters and social media. None of them talk to each other. AI Store Manager replaces the whole stack and does the analysis you never had time for.</p>
+      <p class="eyebrow" data-k="s1_eye">The idea</p>
+      <h2 data-k="s1_h">Seven jobs, one subscription.</h2>
+      <p data-k="s1_p">Independent shops juggle a till, a stock spreadsheet, a camera app, paper posters and social media. None of them talk to each other. AI Store Manager replaces the whole stack and does the analysis you never had time for.</p>
     </div>
     <div class="teams">
-      <div class="team"><b>Stock manager</b><span>Levels, counts, reorder alerts</span></div>
-      <div class="team"><b>Quality lead</b><span>Expiry dates, waste, recalls</span></div>
-      <div class="team"><b>Marketer</b><span>Posters, screens, SMS, promos</span></div>
-      <div class="team"><b>Security</b><span>Cameras tied to till events</span></div>
-      <div class="team"><b>Buyer</b><span>Purchase orders, supplier prices</span></div>
-      <div class="team"><b>Analyst</b><span>Dashboards and weekly actions</span></div>
-      <div class="team"><b>Cashier</b><span>Fast, offline-proof checkout</span></div>
+      <div class="team"><b data-k="t1b">Stock manager</b><span data-k="t1s">Levels, counts, reorder alerts</span></div>
+      <div class="team"><b data-k="t2b">Quality lead</b><span data-k="t2s">Expiry dates, waste, recalls</span></div>
+      <div class="team"><b data-k="t3b">Marketer</b><span data-k="t3s">Posters, screens, SMS, promos</span></div>
+      <div class="team"><b data-k="t4b">Security</b><span data-k="t4s">Cameras tied to till events</span></div>
+      <div class="team"><b data-k="t5b">Buyer</b><span data-k="t5s">Purchase orders, supplier prices</span></div>
+      <div class="team"><b data-k="t6b">Analyst</b><span data-k="t6s">Dashboards and weekly actions</span></div>
+      <div class="team"><b data-k="t7b">Cashier</b><span data-k="t7s">Fast, offline-proof checkout</span></div>
     </div>
   </section>
 
   <section id="modules">
     <div class="sec-head">
-      <p class="eyebrow">Features</p>
-      <h2>20 modules. Switch on only what you need.</h2>
-      <p>Every module ships separately. A shop can sell with just catalogue, stock, till, payments and hardware, then add the rest as it grows. Filter by release phase.</p>
+      <p class="eyebrow" data-k="m_eye">Features</p>
+      <h2 data-k="m_h">20 modules. Switch on only what you need.</h2>
+      <p data-k="m_p">Every module ships separately. A shop can sell with just catalogue, stock, till, payments and hardware, then add the rest as it grows. Filter by release phase.</p>
     </div>
     <div class="filters" id="filters" role="group" aria-label="Filter modules by release phase"></div>
     <div class="mods" id="mods"></div>
@@ -177,126 +183,321 @@ footer{padding-block:32px;border-top:1px solid var(--line);font-size:.88rem;colo
 
   <section>
     <div class="sec-head">
-      <p class="eyebrow">AI that acts</p>
-      <h2>From alert to action in one tap.</h2>
-      <p>The assistant explains why it suggests something, and you stay in charge. You pick how much it may do alone: suggest only, ask first, or run routine tasks by itself.</p>
+      <p class="eyebrow" data-k="a_eye">AI that acts</p>
+      <h2 data-k="a_h">From alert to action in one tap.</h2>
+      <p data-k="a_p">The assistant explains why it suggests something, and you stay in charge. You pick how much it may do alone: suggest only, ask first, or run routine tasks by itself.</p>
     </div>
     <div class="flow">
-      <div class="step"><small>Detect</small><h3>Near-expiry alert</h3><p>Batch dates are tracked at receiving. Products at J-7, J-3 and J-1 land on a watch list.</p></div>
-      <div class="step"><small>Decide</small><h3>Smart markdown</h3><p>A discount is proposed from days left and sales speed, with the reason shown.</p></div>
-      <div class="step"><small>Act</small><h3>One-click promo</h3><p>Price change, shelf label, screen scene and customer message are prepared together.</p></div>
-      <div class="step"><small>Learn</small><h3>Measure the result</h3><p>Sales lift and waste saved feed the next suggestion. Flop products get a replacement idea and a supplier.</p></div>
+      <div class="step"><small data-k="a1s">Detect</small><h3 data-k="a1h">Near-expiry alert</h3><p data-k="a1p">Batch dates are tracked at receiving. Products at J-7, J-3 and J-1 land on a watch list.</p></div>
+      <div class="step"><small data-k="a2s">Decide</small><h3 data-k="a2h">Smart markdown</h3><p data-k="a2p">A discount is proposed from days left and sales speed, with the reason shown.</p></div>
+      <div class="step"><small data-k="a3s">Act</small><h3 data-k="a3h">One-click promo</h3><p data-k="a3p">Price change, shelf label, screen scene and customer message are prepared together.</p></div>
+      <div class="step"><small data-k="a4s">Learn</small><h3 data-k="a4h">Measure the result</h3><p data-k="a4p">Sales lift and waste saved feed the next suggestion. Flop products get a replacement idea and a supplier.</p></div>
     </div>
   </section>
 
   <section>
     <div class="two">
       <div class="sec-head" style="margin:0">
-        <p class="eyebrow">Plug and play hardware</p>
-        <h2>Every screen and printer finds you.</h2>
-        <p>A small local Store Hub talks to your equipment. A TV on the Wi-Fi shows a six-digit code, you type it in the app, and it appears in your device list, ready for a promo, a camera feed or the live basket.</p>
+        <p class="eyebrow" data-k="h_eye">Plug and play hardware</p>
+        <h2 data-k="h_h">Every screen and printer finds you.</h2>
+        <p data-k="h_p">A small local Store Hub talks to your equipment. A TV on the Wi-Fi shows a six-digit code, you type it in the app, and it appears in your device list, ready for a promo, a camera feed or the live basket.</p>
         <div class="chips">
-          <span>ESC/POS receipt printers</span><span>Cash drawer</span><span>USB and Bluetooth scanners</span><span>Label printers (Zebra, Brother)</span><span>Connected scales</span><span>Payment terminals</span><span>ONVIF / RTSP cameras</span><span>Any TV with a browser</span><span>Customer display</span>
+          <span data-k="c1">ESC/POS receipt printers</span><span data-k="c2">Cash drawer</span><span data-k="c3">USB and Bluetooth scanners</span><span data-k="c4">Label printers (Zebra, Brother)</span><span data-k="c5">Connected scales</span><span data-k="c6">Payment terminals</span><span data-k="c7">ONVIF / RTSP cameras</span><span data-k="c8">Any TV with a browser</span><span data-k="c9">Customer display</span>
         </div>
       </div>
       <div class="pair">
-        <div class="lab">Pair new screen</div>
+        <div class="lab" data-k="pr_lab">Pair new screen</div>
         <div class="digits">482 915</div>
-        <div class="sub">Enter this code in the app. Name it "Dairy aisle" and send your first promo.</div>
+        <div class="sub" data-k="pr_sub">Enter this code in the app. Name it "Dairy aisle" and send your first promo.</div>
       </div>
     </div>
   </section>
 
   <section>
     <div class="sec-head">
-      <p class="eyebrow">Everywhere</p>
-      <h2>Works in a browser first, then on every device.</h2>
-      <p>The till runs offline and syncs when the connection returns, so a dead internet line never stops a sale.</p>
+      <p class="eyebrow" data-k="p_eye">Everywhere</p>
+      <h2 data-k="p_h">Works in a browser first, then on every device.</h2>
+      <p data-k="p_p">The till runs offline and syncs when the connection returns, so a dead internet line never stops a sale.</p>
     </div>
     <div class="plat">
-      <div><b>Any browser</b><span>Installable web app</span></div>
-      <div><b>Windows</b><span>x64 and ARM64, POS terminals</span></div>
-      <div><b>macOS</b><span>Intel and Apple Silicon</span></div>
-      <div><b>iPhone and iPad</b><span>Mobile till, camera scanning</span></div>
-      <div><b>Android</b><span>Phones, tablets, Sunmi-type terminals</span></div>
-      <div><b>Linux and ARM</b><span>Mini-PCs, Raspberry Pi</span></div>
+      <div><b data-k="pl1b">Any browser</b><span data-k="pl1s">Installable web app</span></div>
+      <div><b>Windows</b><span data-k="pl2s">x64 and ARM64, POS terminals</span></div>
+      <div><b>macOS</b><span data-k="pl3s">Intel and Apple Silicon</span></div>
+      <div><b data-k="pl4b">iPhone and iPad</b><span data-k="pl4s">Mobile till, camera scanning</span></div>
+      <div><b>Android</b><span data-k="pl5s">Phones, tablets, Sunmi-type terminals</span></div>
+      <div><b data-k="pl6b">Linux and ARM</b><span data-k="pl6s">Mini-PCs, Raspberry Pi</span></div>
     </div>
   </section>
 
   <section>
     <div class="sec-head">
-      <p class="eyebrow">Principles</p>
-      <h2>Built to be trusted at the till.</h2>
+      <p class="eyebrow" data-k="q_eye">Principles</p>
+      <h2 data-k="q_h">Built to be trusted at the till.</h2>
     </div>
     <div class="principles">
-      <div><h3>Selling never stops</h3><p>Offline-first, fast start-up, support for entry-level hardware. Target: a first sale within 15 minutes of signing up.</p></div>
-      <div><h3>The AI proposes, you decide</h3><p>Every suggestion says why. Nothing ships without your approval unless you grant it.</p></div>
-      <div><h3>Your data stays yours</h3><p>Full export, full deletion, no resale of customer data.</p></div>
-      <div><h3>Compliant by design</h3><p>VAT, fiscal adapters per country, GDPR, camera law, food traceability and e-invoicing via Peppol.</p></div>
-      <div><h3>One core, many trades</h3><p>Profiles for groceries, clothing, shoes and DIY pre-fill categories, units and reports. No separate versions.</p></div>
-      <div><h3>Open ecosystem</h3><p>Public API, webhooks, Zapier and n8n, and an MCP server so your own assistant can read your shop.</p></div>
+      <div><h3 data-k="q1h">Selling never stops</h3><p data-k="q1p">Offline-first, fast start-up, support for entry-level hardware. Target: a first sale within 15 minutes of signing up.</p></div>
+      <div><h3 data-k="q2h">The AI proposes, you decide</h3><p data-k="q2p">Every suggestion says why. Nothing ships without your approval unless you grant it.</p></div>
+      <div><h3 data-k="q3h">Your data stays yours</h3><p data-k="q3p">Full export, full deletion, no resale of customer data.</p></div>
+      <div><h3 data-k="q4h">Compliant by design</h3><p data-k="q4p">VAT, fiscal adapters per country, GDPR, camera law, food traceability and e-invoicing via Peppol.</p></div>
+      <div><h3 data-k="q5h">One core, many trades</h3><p data-k="q5p">Profiles for groceries, clothing, shoes and DIY pre-fill categories, units and reports. No separate versions.</p></div>
+      <div><h3 data-k="q6h">Open ecosystem</h3><p data-k="q6p">Public API, webhooks, Zapier and n8n, and an MCP server so your own assistant can read your shop.</p></div>
     </div>
   </section>
 
   <section>
     <div class="sec-head">
-      <p class="eyebrow">Where it stands</p>
-      <h2>Built in the open.</h2>
-      <p>The product is being built now. The feature tracker lists every planned capability, and the first working pieces are in the repository.</p>
+      <p class="eyebrow" data-k="st_eye">Where it stands</p>
+      <h2 data-k="st_h">Built in the open.</h2>
+      <p data-k="st_p">The product is being built now. The feature tracker lists every planned capability, and the first working pieces are in the repository.</p>
     </div>
     <div class="road">
-      <div><b>270</b><span>features tracked</span></div>
-      <div><b>20</b><span>modules</span></div>
-      <div><b>66</b><span>in the MVP</span></div>
-      <div><b>3</b><span>in progress</span></div>
+      <div><b>270</b><span data-k="st1">features tracked</span></div>
+      <div><b>20</b><span data-k="st2">modules</span></div>
+      <div><b>66</b><span data-k="st3">in the MVP</span></div>
+      <div><b>3</b><span data-k="st4">in progress</span></div>
     </div>
-    <p class="note">In progress today: the touch till demo (TypeScript plus a Rust core compiled to WebAssembly), a hub command that prints a sample receipt, and the back-office web app skeleton. Everything else on this page is planned and marked by phase above.</p>
+    <p class="note" data-k="st_note">In progress today: the touch till demo (TypeScript plus a Rust core compiled to WebAssembly), a hub command that prints a sample receipt, and the back-office web app skeleton. Everything else on this page is planned and marked by phase above.</p>
   </section>
 
   <section class="final">
-    <h2>Run your shop like a team of twelve.</h2>
-    <p style="color:var(--muted);max-width:34rem">Read the docs, pick a feature from the tracker, or follow the first releases.</p>
-    <a class="btn" href="https://github.com/Lascages/ai-store-manager">Open the repository</a>
+    <h2 data-k="f_h">Run your shop like a team of twelve.</h2>
+    <p style="color:var(--muted);max-width:34rem" data-k="f_p">Read the docs, pick a feature from the tracker, or follow the first releases.</p>
+    <a class="btn" href="https://github.com/Lascages/ai-store-manager" data-k="f_btn">Open the repository</a>
   </section>
 
-  <footer><span>AI Store Manager · Lascages</span><span>Feature data from the project tracker, October 2026</span></footer>
+  <footer><span>AI Store Manager · Lascages</span><span data-k="foot">Feature data from the project tracker, October 2026</span></footer>
 </div>
 
 <script>
+var FR={
+gh:"Voir sur GitHub",
+eyebrow:"Caisse · stock · écrans · caméras · IA",
+h1:"Toute une équipe de magasin dans <em>une seule app.</em>",
+lead:"Vendez, réapprovisionnez, affichez, filmez, imprimez, fidélisez et faites de la publicité depuis un seul endroit, sur tous vos appareils. Quand des yaourts approchent de leur date, l'app propose la remise, imprime l'étiquette, met à jour l'écran du magasin et envoie un SMS à vos clients fidèles.",
+cta1:"Découvrir les 20 modules",cta2:"Suivre la construction",
+r_loc:"Bruxelles · Caisse 2",r_time:"14:32 · Ticket 0418",
+r1:"Baguette tradition",r2:"Lait bio 1L ×2",r3:"Yaourt nature ×4",r_sale:"  Date proche −30%",r4:"Tomates 0,640 kg",
+r_card:"Carte",r_pts:"Points fidélité",
+r_ai:"<b>IA :</b> 12 yaourts périment dans 3 jours. Appliquer −30%, imprimer les étiquettes, afficher sur l'écran 2, envoyer un SMS à 40 clients fidèles ? [Go]",
+s1_eye:"L'idée",s1_h:"Sept métiers, un seul abonnement.",
+s1_p:"Les commerçants indépendants jonglent entre une caisse, un tableur de stock, une appli de caméras, des affiches papier et les réseaux sociaux. Rien ne communique. AI Store Manager remplace toute la pile et fait l'analyse que vous n'aviez jamais le temps de faire.",
+t1b:"Gestionnaire de stock",t1s:"Niveaux, inventaires, alertes de réassort",
+t2b:"Responsable qualité",t2s:"Dates de péremption, gaspillage, rappels",
+t3b:"Marketeur",t3s:"Affiches, écrans, SMS, promos",
+t4b:"Sécurité",t4s:"Caméras liées aux événements de caisse",
+t5b:"Acheteur",t5s:"Bons de commande, prix fournisseurs",
+t6b:"Analyste",t6s:"Tableaux de bord et actions hebdo",
+t7b:"Caissier",t7s:"Encaissement rapide, même hors ligne",
+m_eye:"Fonctionnalités",m_h:"20 modules. N'activez que ce dont vous avez besoin.",
+m_p:"Chaque module est livré séparément. Un magasin peut vendre avec le catalogue, le stock, la caisse, les paiements et le matériel, puis ajouter le reste en grandissant. Filtrez par phase de sortie.",
+a_eye:"Une IA qui agit",a_h:"De l'alerte à l'action en un clic.",
+a_p:"L'assistant explique pourquoi il suggère quelque chose, et vous gardez la main. Vous choisissez son autonomie : suggérer seulement, demander d'abord, ou exécuter seul les tâches courantes.",
+a1s:"Détecter",a1h:"Alerte de péremption",a1p:"Les dates sont suivies par lot dès la réception. Les produits à J-7, J-3 et J-1 passent sur une liste de surveillance.",
+a2s:"Décider",a2h:"Démarque intelligente",a2p:"Une remise est proposée selon les jours restants et la vitesse de vente, avec la raison affichée.",
+a3s:"Agir",a3h:"Promo en un clic",a3p:"Changement de prix, étiquette de rayon, scène d'écran et message client sont préparés ensemble.",
+a4s:"Apprendre",a4h:"Mesurer le résultat",a4p:"L'effet sur les ventes et le gaspillage évité nourrissent la suggestion suivante. Les produits qui ne se vendent pas reçoivent une idée de remplacement et un fournisseur.",
+h_eye:"Matériel plug and play",h_h:"Chaque écran et chaque imprimante vous trouve.",
+h_p:"Un petit Store Hub local dialogue avec votre matériel. Une TV sur le Wi-Fi affiche un code à six chiffres, vous le saisissez dans l'app, et elle apparaît dans votre liste d'appareils, prête pour une promo, un flux caméra ou le panier en direct.",
+c1:"Imprimantes de tickets ESC/POS",c2:"Tiroir-caisse",c3:"Scanners USB et Bluetooth",c4:"Imprimantes d'étiquettes (Zebra, Brother)",c5:"Balances connectées",c6:"Terminaux de paiement",c7:"Caméras ONVIF / RTSP",c8:"Toute TV avec navigateur",c9:"Afficheur client",
+pr_lab:"Associer un nouvel écran",pr_sub:"Saisissez ce code dans l'app. Nommez-le « Rayon frais » et envoyez votre première promo.",
+p_eye:"Partout",p_h:"D'abord dans un navigateur, puis sur chaque appareil.",
+p_p:"La caisse fonctionne hors ligne et se synchronise au retour de la connexion : une coupure internet n'arrête jamais une vente.",
+pl1b:"Tout navigateur",pl1s:"Web app installable",pl2s:"x64 et ARM64, caisses",pl3s:"Intel et Apple Silicon",
+pl4b:"iPhone et iPad",pl4s:"Caisse mobile, scan par caméra",pl5s:"Téléphones, tablettes, terminaux type Sunmi",pl6b:"Linux et ARM",pl6s:"Mini-PC, Raspberry Pi",
+q_eye:"Principes",q_h:"Conçu pour inspirer confiance à la caisse.",
+q1h:"La vente ne s'arrête jamais",q1p:"Hors ligne d'abord, démarrage rapide, matériel d'entrée de gamme pris en charge. Objectif : une première vente moins de 15 minutes après l'inscription.",
+q2h:"L'IA propose, vous décidez",q2p:"Chaque suggestion dit pourquoi. Rien n'est appliqué sans votre accord, sauf si vous l'autorisez.",
+q3h:"Vos données restent à vous",q3p:"Export complet, suppression complète, aucune revente de données clients.",
+q4h:"Conforme dès la conception",q4p:"TVA, adaptateurs fiscaux par pays, RGPD, loi sur les caméras, traçabilité alimentaire et facturation électronique via Peppol.",
+q5h:"Un cœur, plusieurs métiers",q5p:"Des profils pour l'alimentation, les vêtements, les chaussures et le bricolage préremplissent catégories, unités et rapports. Pas de versions séparées.",
+q6h:"Écosystème ouvert",q6p:"API publique, webhooks, Zapier et n8n, et un serveur MCP pour que votre propre assistant lise les données de votre magasin.",
+st_eye:"Où en est-on",st_h:"Construit à ciel ouvert.",
+st_p:"Le produit est en cours de construction. Le suivi des fonctionnalités liste chaque capacité prévue, et les premières pièces fonctionnelles sont dans le dépôt.",
+st1:"fonctionnalités suivies",st2:"modules",st3:"dans le MVP",st4:"en cours",
+st_note:"En cours aujourd'hui : la démo de caisse tactile (TypeScript et cœur Rust compilé en WebAssembly), une commande du hub qui imprime un ticket d'exemple, et le squelette de l'application web de back-office. Tout le reste de cette page est prévu et marqué par phase ci-dessus.",
+f_h:"Gérez votre magasin comme une équipe de douze.",f_p:"Lisez la documentation, choisissez une fonctionnalité dans le suivi, ou suivez les premières versions.",f_btn:"Ouvrir le dépôt",
+foot:"Données issues du suivi du projet, octobre 2026",
+mods_n:"fonctionnalités prévues",all:"Tous",filter:"Filtrer les modules par phase de sortie",
+modbtn:"Module"
+};
+var NL={
+gh:"Bekijk op GitHub",
+eyebrow:"Kassa · voorraad · schermen · camera's · AI",
+h1:"Een heel winkelteam in <em>één app.</em>",
+lead:"Verkoop, bevoorraad, toon, film, print, beloon en maak reclame vanaf één plek, op elk toestel. Als yoghurt drie dagen van zijn datum zit, stelt de app de korting voor, print het etiket, werkt het winkelscherm bij en stuurt een sms naar je trouwe klanten.",
+cta1:"Ontdek de 20 modules",cta2:"Volg de ontwikkeling",
+r_loc:"Brussel · Kassa 2",r_time:"14:32 · Ticket 0418",
+r1:"Baguette tradition",r2:"Biomelk 1L ×2",r3:"Yoghurt naturel ×4",r_sale:"  Houdbaarheid kort −30%",r4:"Tomaten 0,640 kg",
+r_card:"Kaart",r_pts:"Spaarpunten",
+r_ai:"<b>AI:</b> 12 yoghurts verlopen over 3 dagen. −30% toepassen, etiketten printen, tonen op scherm 2, sms naar 40 trouwe klanten? [Doen]",
+s1_eye:"Het idee",s1_h:"Zeven functies, één abonnement.",
+s1_p:"Zelfstandige winkeliers jongleren met een kassa, een voorraadspreadsheet, een camera-app, papieren affiches en sociale media. Niets praat met elkaar. AI Store Manager vervangt de hele stapel en doet de analyse waar je nooit tijd voor had.",
+t1b:"Voorraadbeheerder",t1s:"Niveaus, tellingen, bestelmeldingen",
+t2b:"Kwaliteitsverantwoordelijke",t2s:"Houdbaarheid, verspilling, terugroepacties",
+t3b:"Marketeer",t3s:"Affiches, schermen, sms, promo's",
+t4b:"Beveiliging",t4s:"Camera's gekoppeld aan kassagebeurtenissen",
+t5b:"Inkoper",t5s:"Bestelbonnen, leveranciersprijzen",
+t6b:"Analist",t6s:"Dashboards en wekelijkse acties",
+t7b:"Kassier",t7s:"Snel afrekenen, ook offline",
+m_eye:"Functies",m_h:"20 modules. Activeer alleen wat je nodig hebt.",
+m_p:"Elke module komt apart uit. Een winkel kan verkopen met catalogus, voorraad, kassa, betalingen en hardware, en de rest toevoegen naarmate hij groeit. Filter op releasefase.",
+a_eye:"AI die handelt",a_h:"Van melding naar actie met één tik.",
+a_p:"De assistent legt uit waarom hij iets voorstelt en jij blijft aan het roer. Je kiest hoeveel hij zelf mag doen: alleen voorstellen, eerst vragen, of routinetaken zelf uitvoeren.",
+a1s:"Opsporen",a1h:"Melding bij korte houdbaarheid",a1p:"Data worden per partij bijgehouden bij ontvangst. Producten op D-7, D-3 en D-1 komen op een kijklijst.",
+a2s:"Beslissen",a2h:"Slimme afprijzing",a2p:"Een korting wordt voorgesteld op basis van resterende dagen en verkoopsnelheid, met de reden erbij.",
+a3s:"Handelen",a3h:"Promo met één klik",a3p:"Prijswijziging, schapetiket, schermscène en klantbericht worden samen voorbereid.",
+a4s:"Leren",a4h:"Het resultaat meten",a4p:"Verkoopstijging en bespaarde verspilling voeden het volgende voorstel. Flopproducten krijgen een vervangidee en een leverancier.",
+h_eye:"Hardware die meteen werkt",h_h:"Elk scherm en elke printer vindt jou.",
+h_p:"Een kleine lokale Store Hub praat met je apparatuur. Een tv op de wifi toont een zescijferige code, jij typt die in de app, en hij verschijnt in je apparatenlijst, klaar voor een promo, een camerabeeld of het live winkelmandje.",
+c1:"ESC/POS-bonprinters",c2:"Kassalade",c3:"USB- en Bluetooth-scanners",c4:"Etikettenprinters (Zebra, Brother)",c5:"Aangesloten weegschalen",c6:"Betaalterminals",c7:"ONVIF / RTSP-camera's",c8:"Elke tv met browser",c9:"Klantendisplay",
+pr_lab:"Nieuw scherm koppelen",pr_sub:"Voer deze code in de app in. Noem hem \"Zuivelschap\" en stuur je eerste promo.",
+p_eye:"Overal",p_h:"Eerst in een browser, daarna op elk toestel.",
+p_p:"De kassa werkt offline en synchroniseert zodra de verbinding terug is, zodat een internetstoring nooit een verkoop tegenhoudt.",
+pl1b:"Elke browser",pl1s:"Installeerbare webapp",pl2s:"x64 en ARM64, kassaterminals",pl3s:"Intel en Apple Silicon",
+pl4b:"iPhone en iPad",pl4s:"Mobiele kassa, scannen met camera",pl5s:"Telefoons, tablets, terminals van het type Sunmi",pl6b:"Linux en ARM",pl6s:"Mini-pc's, Raspberry Pi",
+q_eye:"Principes",q_h:"Gebouwd om te vertrouwen aan de kassa.",
+q1h:"Verkopen stopt nooit",q1p:"Offline eerst, snelle start, ondersteuning voor instaphardware. Doel: een eerste verkoop binnen 15 minuten na aanmelding.",
+q2h:"De AI stelt voor, jij beslist",q2p:"Elk voorstel zegt waarom. Niets gebeurt zonder jouw akkoord, tenzij je dat toestaat.",
+q3h:"Jouw gegevens blijven van jou",q3p:"Volledige export, volledige verwijdering, geen doorverkoop van klantgegevens.",
+q4h:"Conform van bij het ontwerp",q4p:"Btw, fiscale adapters per land, GDPR, cameraweggeving, voedseltraceerbaarheid en e-facturatie via Peppol.",
+q5h:"Eén kern, vele handelszaken",q5p:"Profielen voor voeding, kleding, schoenen en doe-het-zelf vullen categorieën, eenheden en rapporten vooraf in. Geen aparte versies.",
+q6h:"Open ecosysteem",q6p:"Publieke API, webhooks, Zapier en n8n, en een MCP-server zodat je eigen assistent je winkel kan lezen.",
+st_eye:"Stand van zaken",st_h:"Open gebouwd.",
+st_p:"Het product wordt nu gebouwd. De functielijst toont elke geplande mogelijkheid, en de eerste werkende onderdelen staan in de repository.",
+st1:"functies gevolgd",st2:"modules",st3:"in de MVP",st4:"in uitvoering",
+st_note:"Vandaag in uitvoering: de demo van de touchkassa (TypeScript met een Rust-kern gecompileerd naar WebAssembly), een hub-opdracht die een voorbeeldbon print, en het skelet van de back-office webapp. Al de rest op deze pagina is gepland en per fase aangeduid.",
+f_h:"Run je winkel als een team van twaalf.",f_p:"Lees de documentatie, kies een functie uit de lijst, of volg de eerste releases.",f_btn:"Open de repository",
+foot:"Functiegegevens uit de projecttracker, oktober 2026",
+mods_n:"geplande functies",all:"Alle",filter:"Filter modules op releasefase",
+modbtn:"Module"
+};
+var EN={mods_n:"features planned",all:"All",filter:"Filter modules by release phase"};
+var T={en:EN,fr:FR,nl:NL};
+
+/* code, phase, count, then [name, summary, b1, b2, b3] for en, fr, nl */
 var MODS=[
-["POS","Point of sale","Touch till that keeps selling offline.","MVP",31,["Barcode scan, held tickets","Split payments, returns","Mobile till, customer display"]],
-["CAT","Product catalogue","One clean record per product.","MVP",16,["Variants, weight pricing","Barcode enrichment","Bulk CSV import"]],
-["INV","Stock and inventory","Know what you have, everywhere.","MVP",12,["Counts by scan","Batches and recalls","Transfers between shops"]],
-["PAY","Payments","Cash, card, mobile and meal vouchers.","MVP",9,["Card terminals","QR and wallet payments","Card data never stored"]],
-["HW","Hardware and Store Hub","Plug in printers, drawers, scales.","MVP",22,["Auto discovery and pairing","Device health alerts","Over-the-air hub updates"]],
-["FIN","Finance and tax","VAT and fiscal rules handled.","MVP",10,["Multi-rate VAT","Tamper-proof journal","Accountant exports"]],
-["ANA","Reports and dashboards","Today's numbers at a glance.","MVP",15,["X and Z reports","Margin and ABC analysis","Scheduled reports"]],
-["CORE","Platform and accounts","Roles, shops and sign-in.","MVP",15,["Roles and quick PIN","Multi-shop view","Audit log"]],
-["OPS","Quality and security","Tested, monitored, secure.","MVP",18,["Automated checks","Release pipeline","Security by default"]],
-["EXP","Expiry and waste","Sell it before it spoils.","V1",10,["Date per batch","Markdown suggestions","Waste cost tracking"]],
-["SCR","Screens and signage","Any TV becomes a display.","V1",18,["Pair by code","Scene editor, playlists","Live promos from stock"]],
-["CRM","Customers and loyalty","Make regulars feel it.","V1",15,["Points and wallet card","Segments and coupons","GDPR consent tracking"]],
-["PUR","Purchasing","Order the right amount on time.","V1",9,["Purchase orders","Reorder suggestions","Supplier comparison"]],
-["INT","Integrations and API","Connect the tools you use.","V1",8,["Public REST API","Peppol e-invoicing","Zapier, n8n, MCP"]],
-["STF","Staff and operations","Shifts, tasks, checklists.","V1",7,["Clock in and out","Opening checklists","Staff announcements"]],
-["CAM","Cameras and security","See the shop from anywhere.","V2",14,["Live view on any device","Clips linked to till events","People counting"]],
-["MKT","Marketing","Posters, texts and posts, made for you.","V2",13,["Visual generator","Email, SMS, social","Campaign ROI"]],
-["AI","AI and suggestions","Ask your data, act on the answer.","V2",15,["Chat with your sales","Demand forecast","Weekly action plan"]],
-["ECO","E-commerce","Web shop and click and collect.","V2",7,["Synced web shop","Local delivery","WhatsApp orders"]],
-["SUP","Supplier ecosystem","Customer demand reaches suppliers.","V3",9,["Unmet-demand loop","Find-me-this-product","Group buying"]]
+["POS","MVP",31,
+ ["Point of sale","Touch till that keeps selling offline.","Barcode scan, held tickets","Split payments, returns","Mobile till, customer display"],
+ ["Caisse","Caisse tactile qui vend même hors ligne.","Scan code-barres, tickets en attente","Paiement partagé, retours","Caisse mobile, afficheur client"],
+ ["Kassa","Touchkassa die ook offline blijft verkopen.","Barcodescan, wachtende tickets","Gesplitste betaling, retours","Mobiele kassa, klantendisplay"]],
+["CAT","MVP",16,
+ ["Product catalogue","One clean record per product.","Variants, weight pricing","Barcode enrichment","Bulk CSV import"],
+ ["Catalogue produits","Une fiche propre par produit.","Variantes, prix au poids","Enrichissement par code-barres","Import CSV en masse"],
+ ["Productcatalogus","Eén nette fiche per product.","Varianten, prijs per gewicht","Aanvullen via barcode","Bulkimport via CSV"]],
+["INV","MVP",12,
+ ["Stock and inventory","Know what you have, everywhere.","Counts by scan","Batches and recalls","Transfers between shops"],
+ ["Stock et inventaire","Sachez ce que vous avez, partout.","Inventaire par scan","Lots et rappels","Transferts entre magasins"],
+ ["Voorraad en inventaris","Weet wat je hebt, overal.","Tellen met scan","Partijen en terugroepacties","Transfers tussen winkels"]],
+["PAY","MVP",9,
+ ["Payments","Cash, card, mobile and meal vouchers.","Card terminals","QR and wallet payments","Card data never stored"],
+ ["Paiements","Espèces, carte, mobile et titres-repas.","Terminaux carte","Paiements QR et wallet","Données de carte jamais stockées"],
+ ["Betalingen","Cash, kaart, mobiel en maaltijdcheques.","Kaartterminals","QR- en walletbetalingen","Kaartgegevens nooit opgeslagen"]],
+["HW","MVP",22,
+ ["Hardware and Store Hub","Plug in printers, drawers, scales.","Auto discovery and pairing","Device health alerts","Over-the-air hub updates"],
+ ["Matériel et Store Hub","Branchez imprimantes, tiroirs, balances.","Découverte et appairage auto","Alertes d'état des appareils","Mises à jour du hub à distance"],
+ ["Hardware en Store Hub","Sluit printers, laden en weegschalen aan.","Automatisch vinden en koppelen","Meldingen over apparaatstatus","Hub-updates via internet"]],
+["FIN","MVP",10,
+ ["Finance and tax","VAT and fiscal rules handled.","Multi-rate VAT","Tamper-proof journal","Accountant exports"],
+ ["Finance et fiscalité","TVA et règles fiscales gérées.","TVA multi-taux","Journal infalsifiable","Exports pour le comptable"],
+ ["Financiën en belastingen","Btw en fiscale regels geregeld.","Btw met meerdere tarieven","Onvervalsbaar journaal","Exports voor de boekhouder"]],
+["ANA","MVP",15,
+ ["Reports and dashboards","Today's numbers at a glance.","X and Z reports","Margin and ABC analysis","Scheduled reports"],
+ ["Rapports et tableaux de bord","Les chiffres du jour d'un coup d'œil.","Rapports X et Z","Marge et analyse ABC","Rapports planifiés"],
+ ["Rapporten en dashboards","De cijfers van vandaag in één blik.","X- en Z-rapporten","Marge en ABC-analyse","Geplande rapporten"]],
+["CORE","MVP",15,
+ ["Platform and accounts","Roles, shops and sign-in.","Roles and quick PIN","Multi-shop view","Audit log"],
+ ["Plateforme et comptes","Rôles, magasins et connexion.","Rôles et PIN rapide","Vue multi-magasins","Journal d'audit"],
+ ["Platform en accounts","Rollen, winkels en aanmelden.","Rollen en snelle pincode","Overzicht van meerdere winkels","Auditlog"]],
+["OPS","MVP",18,
+ ["Quality and security","Tested, monitored, secure.","Automated checks","Release pipeline","Security by default"],
+ ["Qualité et sécurité","Testé, surveillé, sécurisé.","Contrôles automatiques","Chaîne de livraison","Sécurité par défaut"],
+ ["Kwaliteit en veiligheid","Getest, bewaakt, veilig.","Automatische controles","Releaseproces","Standaard beveiligd"]],
+["EXP","V1",10,
+ ["Expiry and waste","Sell it before it spoils.","Date per batch","Markdown suggestions","Waste cost tracking"],
+ ["Péremption et gaspillage","Vendez avant que ça se périme.","Date par lot","Suggestions de démarque","Suivi du coût du gaspillage"],
+ ["Houdbaarheid en verspilling","Verkoop het voor het bederft.","Datum per partij","Voorstellen voor afprijzing","Kosten van verspilling volgen"]],
+["SCR","V1",18,
+ ["Screens and signage","Any TV becomes a display.","Pair by code","Scene editor, playlists","Live promos from stock"],
+ ["Écrans et affichage","Toute TV devient un écran.","Appairage par code","Éditeur de scènes, playlists","Promos en direct depuis le stock"],
+ ["Schermen en signage","Elke tv wordt een display.","Koppelen met code","Sceneneditor, afspeellijsten","Live promo's vanuit de voorraad"]],
+["CRM","V1",15,
+ ["Customers and loyalty","Make regulars feel it.","Points and wallet card","Segments and coupons","GDPR consent tracking"],
+ ["Clients et fidélité","Faites sentir aux habitués qu'ils comptent.","Points et carte wallet","Segments et coupons","Suivi des consentements RGPD"],
+ ["Klanten en loyaliteit","Laat vaste klanten het voelen.","Punten en walletkaart","Segmenten en coupons","Opvolging van GDPR-toestemming"]],
+["PUR","V1",9,
+ ["Purchasing","Order the right amount on time.","Purchase orders","Reorder suggestions","Supplier comparison"],
+ ["Achats","Commandez la bonne quantité à temps.","Bons de commande","Suggestions de réassort","Comparaison de fournisseurs"],
+ ["Inkoop","Bestel de juiste hoeveelheid op tijd.","Bestelbonnen","Voorstellen voor aanvulling","Leveranciers vergelijken"]],
+["INT","V1",8,
+ ["Integrations and API","Connect the tools you use.","Public REST API","Peppol e-invoicing","Zapier, n8n, MCP"],
+ ["Intégrations et API","Connectez les outils que vous utilisez.","API REST publique","Facturation électronique Peppol","Zapier, n8n, MCP"],
+ ["Integraties en API","Koppel de tools die je gebruikt.","Publieke REST-API","E-facturatie via Peppol","Zapier, n8n, MCP"]],
+["STF","V1",7,
+ ["Staff and operations","Shifts, tasks, checklists.","Clock in and out","Opening checklists","Staff announcements"],
+ ["Personnel et opérations","Équipes, tâches, checklists.","Pointage","Checklists d'ouverture","Annonces au personnel"],
+ ["Personeel en werking","Shifts, taken, checklists.","In- en uitklokken","Openingschecklists","Mededelingen aan het personeel"]],
+["CAM","V2",14,
+ ["Cameras and security","See the shop from anywhere.","Live view on any device","Clips linked to till events","People counting"],
+ ["Caméras et sécurité","Voyez le magasin de n'importe où.","Direct sur tout appareil","Clips liés aux événements de caisse","Comptage de personnes"],
+ ["Camera's en beveiliging","Zie de winkel vanaf overal.","Live beeld op elk toestel","Clips gekoppeld aan kassagebeurtenissen","Personen tellen"]],
+["MKT","V2",13,
+ ["Marketing","Posters, texts and posts, made for you.","Visual generator","Email, SMS, social","Campaign ROI"],
+ ["Marketing","Affiches, textes et posts, préparés pour vous.","Générateur de visuels","E-mail, SMS, réseaux sociaux","ROI des campagnes"],
+ ["Marketing","Affiches, teksten en posts, voor je gemaakt.","Visualgenerator","E-mail, sms, sociale media","Rendement van campagnes"]],
+["AI","V2",15,
+ ["AI and suggestions","Ask your data, act on the answer.","Chat with your sales","Demand forecast","Weekly action plan"],
+ ["IA et suggestions","Interrogez vos données, agissez sur la réponse.","Dialogue avec vos ventes","Prévision de la demande","Plan d'actions hebdo"],
+ ["AI en voorstellen","Bevraag je data, handel op het antwoord.","Chat met je verkoopcijfers","Vraagvoorspelling","Wekelijks actieplan"]],
+["ECO","V2",7,
+ ["E-commerce","Web shop and click and collect.","Synced web shop","Local delivery","WhatsApp orders"],
+ ["E-commerce","Boutique en ligne et click & collect.","Boutique synchronisée","Livraison locale","Commandes WhatsApp"],
+ ["E-commerce","Webshop en click & collect.","Gesynchroniseerde webshop","Lokale levering","Bestellingen via WhatsApp"]],
+["SUP","V3",9,
+ ["Supplier ecosystem","Customer demand reaches suppliers.","Unmet-demand loop","Find-me-this-product","Group buying"],
+ ["Écosystème fournisseurs","La demande des clients atteint les fournisseurs.","Boucle de demande non satisfaite","« Trouve-moi ce produit »","Achats groupés"],
+ ["Leveranciersecosysteem","Klantvraag bereikt de leveranciers.","Lus voor onvervulde vraag","Zoek dit product voor mij","Groepsaankoop"]]
 ];
-var cur="All",box=document.getElementById("mods"),fb=document.getElementById("filters");
-MODS.forEach(function(m){
-  var d=document.createElement("article");d.className="mod";d.dataset.phase=m[3];
-  d.innerHTML='<div class="top"><span class="code">'+m[0]+'</span><span class="phase '+m[3].toLowerCase()+'">'+m[3]+'</span></div><h3>'+m[1]+'</h3><p>'+m[2]+'</p><ul>'+m[5].map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul><div class="n">'+m[4]+' features planned</div>';
-  box.appendChild(d);
+var LANGS=[["en","EN","English"],["fr","FR","Français"],["nl","NL","Nederlands"]];
+var lang="en",cur="All";
+var keyed=[].slice.call(document.querySelectorAll("[data-k]"));
+keyed.forEach(function(el){EN[el.dataset.k]=el.hasAttribute("data-html")?el.innerHTML:el.textContent});
+var box=document.getElementById("mods"),fb=document.getElementById("filters"),lb=document.getElementById("lang");
+
+function renderMods(){
+  box.innerHTML="";
+  var i={en:3,fr:4,nl:5}[lang];
+  MODS.forEach(function(m){
+    var t=m[i],d=document.createElement("article");d.className="mod";d.dataset.phase=m[1];
+    d.hidden=!(cur==="All"||cur===m[1]);
+    d.innerHTML='<div class="top"><span class="code">'+m[0]+'</span><span class="phase '+m[1].toLowerCase()+'">'+m[1]+'</span></div><h3>'+t[0]+'</h3><p>'+t[1]+'</p><ul>'+t.slice(2).map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul><div class="n">'+m[2]+' '+T[lang].mods_n+'</div>';
+    box.appendChild(d);
+  });
+}
+function renderFilters(){
+  fb.innerHTML="";fb.setAttribute("aria-label",T[lang].filter);
+  ["All","MVP","V1","V2","V3"].forEach(function(p){
+    var b=document.createElement("button");b.type="button";b.textContent=p==="All"?T[lang].all:p;b.setAttribute("aria-pressed",p===cur);
+    b.onclick=function(){cur=p;renderFilters();renderMods()};
+    fb.appendChild(b);
+  });
+}
+function setLang(l,save){
+  lang=l;document.documentElement.lang=l;
+  keyed.forEach(function(el){
+    var v=T[l][el.dataset.k];if(v==null)v=EN[el.dataset.k];
+    if(el.hasAttribute("data-html"))el.innerHTML=v;else el.textContent=v;
+  });
+  var rc=document.getElementById("receipt");
+  rc.setAttribute("aria-label",{en:"Sample receipt showing a discounted near-expiry yogurt and an AI suggestion",fr:"Exemple de ticket avec un yaourt à date proche remisé et une suggestion de l'IA",nl:"Voorbeeldbon met afgeprijsde yoghurt met korte houdbaarheid en een AI-voorstel"}[l]);
+  [].forEach.call(lb.children,function(b){b.setAttribute("aria-pressed",b.dataset.l===l)});
+  renderFilters();renderMods();
+  if(save){try{localStorage.setItem("asm-lang",l)}catch(e){}}
+}
+LANGS.forEach(function(x){
+  var b=document.createElement("button");b.type="button";b.textContent=x[1];b.dataset.l=x[0];b.title=x[2];b.lang=x[0];
+  b.onclick=function(){setLang(x[0],true)};lb.appendChild(b);
 });
-["All","MVP","V1","V2","V3"].forEach(function(p){
-  var b=document.createElement("button");b.type="button";b.textContent=p;b.setAttribute("aria-pressed",p==="All");
-  b.onclick=function(){
-    cur=p;[].forEach.call(fb.children,function(x){x.setAttribute("aria-pressed",x===b)});
-    [].forEach.call(box.children,function(c){c.hidden=!(p==="All"||c.dataset.phase===p)});
-  };
-  fb.appendChild(b);
-});
+var start="en";
+try{var s=localStorage.getItem("asm-lang");if(s&&T[s])start=s;else{var n=(navigator.language||"en").slice(0,2).toLowerCase();if(T[n])start=n}}catch(e){}
+setLang(start,false);
 </script>
