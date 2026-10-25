@@ -124,7 +124,6 @@ footer{padding-block:32px;border-top:1px solid var(--line);font-size:.88rem;colo
     <div class="logo"><i></i>AI Store Manager</div>
     <div class="nav-r">
       <div class="lang" id="lang" role="group" aria-label="Language"></div>
-      <a class="btn ghost" href="https://github.com/Lascages/ai-store-manager" data-k="gh">View on GitHub</a>
     </div>
   </nav>
 
@@ -135,7 +134,6 @@ footer{padding-block:32px;border-top:1px solid var(--line);font-size:.88rem;colo
       <p class="lead" data-k="lead">Sell, restock, display, film, print, reward and advertise from one place, on any device. When yogurt is three days from its date, the app suggests the discount, prints the label, updates the shop screen and texts your loyal customers.</p>
       <div class="cta">
         <a class="btn" href="#modules" data-k="cta1">Explore the 20 modules</a>
-        <a class="btn ghost" href="https://github.com/Lascages/ai-store-manager" data-k="cta2">Follow the build</a>
       </div>
     </div>
     <div class="receipt" role="img" id="receipt" aria-label="Sample receipt showing a discounted near-expiry yogurt and an AI suggestion">
@@ -248,7 +246,7 @@ footer{padding-block:32px;border-top:1px solid var(--line);font-size:.88rem;colo
     <div class="sec-head">
       <p class="eyebrow" data-k="st_eye">Where it stands</p>
       <h2 data-k="st_h">Built in the open.</h2>
-      <p data-k="st_p">The product is being built now. The feature tracker lists every planned capability, and the first working pieces are in the repository.</p>
+      <p data-k="st_p">The product is being built now. The feature tracker lists every planned capability, and the first working pieces already run.</p>
     </div>
     <div class="road">
       <div><b>270</b><span data-k="st1">features tracked</span></div>
@@ -261,8 +259,8 @@ footer{padding-block:32px;border-top:1px solid var(--line);font-size:.88rem;colo
 
   <section class="final">
     <h2 data-k="f_h">Run your shop like a team of twelve.</h2>
-    <p style="color:var(--muted);max-width:34rem" data-k="f_p">Read the docs, pick a feature from the tracker, or follow the first releases.</p>
-    <a class="btn" href="https://github.com/Lascages/ai-store-manager" data-k="f_btn">Open the repository</a>
+    <p style="color:var(--muted);max-width:34rem" data-k="f_p">Pick a module, switch on only what you need, and follow the first releases.</p>
+    <a class="btn" href="#modules" data-k="f_btn">Explore the modules</a>
   </section>
 
   <footer><span>AI Store Manager · Lascages</span><span data-k="foot">Feature data from the project tracker, October 2026</span></footer>
@@ -270,7 +268,6 @@ footer{padding-block:32px;border-top:1px solid var(--line);font-size:.88rem;colo
 
 <script>
 var FR={
-gh:"Voir sur GitHub",
 eyebrow:"Caisse · stock · écrans · caméras · IA",
 h1:"Toute une équipe de magasin dans <em>une seule app.</em>",
 lead:"Vendez, réapprovisionnez, affichez, filmez, imprimez, fidélisez et faites de la publicité depuis un seul endroit, sur tous vos appareils. Quand des yaourts approchent de leur date, l'app propose la remise, imprime l'étiquette, met à jour l'écran du magasin et envoie un SMS à vos clients fidèles.",
@@ -312,16 +309,15 @@ q4h:"Conforme dès la conception",q4p:"TVA, adaptateurs fiscaux par pays, RGPD, 
 q5h:"Un cœur, plusieurs métiers",q5p:"Des profils pour l'alimentation, les vêtements, les chaussures et le bricolage préremplissent catégories, unités et rapports. Pas de versions séparées.",
 q6h:"Écosystème ouvert",q6p:"API publique, webhooks, Zapier et n8n, et un serveur MCP pour que votre propre assistant lise les données de votre magasin.",
 st_eye:"Où en est-on",st_h:"Construit à ciel ouvert.",
-st_p:"Le produit est en cours de construction. Le suivi des fonctionnalités liste chaque capacité prévue, et les premières pièces fonctionnelles sont dans le dépôt.",
+st_p:"Le produit est en cours de construction. Le suivi des fonctionnalités liste chaque capacité prévue, et les premières pièces fonctionnelles tournent déjà.",
 st1:"fonctionnalités suivies",st2:"modules",st3:"dans le MVP",st4:"en cours",
 st_note:"En cours aujourd'hui : la démo de caisse tactile (TypeScript et cœur Rust compilé en WebAssembly), une commande du hub qui imprime un ticket d'exemple, et le squelette de l'application web de back-office. Tout le reste de cette page est prévu et marqué par phase ci-dessus.",
-f_h:"Gérez votre magasin comme une équipe de douze.",f_p:"Lisez la documentation, choisissez une fonctionnalité dans le suivi, ou suivez les premières versions.",f_btn:"Ouvrir le dépôt",
+f_h:"Gérez votre magasin comme une équipe de douze.",f_p:"Choisissez un module, n'activez que ce dont vous avez besoin, et suivez les premières versions.",f_btn:"Découvrir les modules",
 foot:"Données issues du suivi du projet, octobre 2026",
 mods_n:"fonctionnalités prévues",all:"Tous",filter:"Filtrer les modules par phase de sortie",
 modbtn:"Module"
 };
 var NL={
-gh:"Bekijk op GitHub",
 eyebrow:"Kassa · voorraad · schermen · camera's · AI",
 h1:"Een heel winkelteam in <em>één app.</em>",
 lead:"Verkoop, bevoorraad, toon, film, print, beloon en maak reclame vanaf één plek, op elk toestel. Als yoghurt drie dagen van zijn datum zit, stelt de app de korting voor, print het etiket, werkt het winkelscherm bij en stuurt een sms naar je trouwe klanten.",
@@ -363,10 +359,10 @@ q4h:"Conform van bij het ontwerp",q4p:"Btw, fiscale adapters per land, GDPR, cam
 q5h:"Eén kern, vele handelszaken",q5p:"Profielen voor voeding, kleding, schoenen en doe-het-zelf vullen categorieën, eenheden en rapporten vooraf in. Geen aparte versies.",
 q6h:"Open ecosysteem",q6p:"Publieke API, webhooks, Zapier en n8n, en een MCP-server zodat je eigen assistent je winkel kan lezen.",
 st_eye:"Stand van zaken",st_h:"Open gebouwd.",
-st_p:"Het product wordt nu gebouwd. De functielijst toont elke geplande mogelijkheid, en de eerste werkende onderdelen staan in de repository.",
+st_p:"Het product wordt nu gebouwd. De functielijst toont elke geplande mogelijkheid, en de eerste werkende onderdelen draaien al.",
 st1:"functies gevolgd",st2:"modules",st3:"in de MVP",st4:"in uitvoering",
 st_note:"Vandaag in uitvoering: de demo van de touchkassa (TypeScript met een Rust-kern gecompileerd naar WebAssembly), een hub-opdracht die een voorbeeldbon print, en het skelet van de back-office webapp. Al de rest op deze pagina is gepland en per fase aangeduid.",
-f_h:"Run je winkel als een team van twaalf.",f_p:"Lees de documentatie, kies een functie uit de lijst, of volg de eerste releases.",f_btn:"Open de repository",
+f_h:"Run je winkel als een team van twaalf.",f_p:"Kies een module, activeer alleen wat je nodig hebt, en volg de eerste releases.",f_btn:"Ontdek de modules",
 foot:"Functiegegevens uit de projecttracker, oktober 2026",
 mods_n:"geplande functies",all:"Alle",filter:"Filter modules op releasefase",
 modbtn:"Module"
